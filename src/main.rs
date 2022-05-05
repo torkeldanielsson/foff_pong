@@ -1,10 +1,33 @@
-use macroquad::prelude::*;
+use macroquad::{prelude::*, rand::ChooseRandom};
 
 const PLAYER_SPEED: f32 = 4.0;
 const PLAYER_HEIGHT: f32 = 150.0;
 const BOUNCE_DISTANCE: f32 = 70.0;
-const START_POSITION_x: f32 = 395.0;
+const START_POSITION_X: f32 = 395.0;
 const START_BALL_SPEED: f32 = 3.7;
+
+fn generate_name() -> String {
+    let first_syllables = vec![
+        "An", "El", "Is", "Lin", "So", "Sa", "A", "No", "Ky", "Dy", "Oce",
+    ];
+    let syllables = vec![
+        "mo", "sa", "shi", "ro", "lin", "la", "ki", "na", "ra", "kai", "mi", "sy", "an",
+    ];
+
+    let first_syllable = first_syllables.choose().unwrap();
+
+    let mut name = String::new();
+
+    name += first_syllable;
+
+    let number_of_second_syllables = vec![2, 3, 4].choose().unwrap().to_owned();
+    for _ in 0..number_of_second_syllables {
+        let syllable = syllables.choose().unwrap();
+
+        name += syllable;
+    }
+    name
+}
 
 #[macroquad::main("BasicShapes")]
 async fn main() {
@@ -12,18 +35,21 @@ async fn main() {
 
     let mut ball_speed: f32 = START_BALL_SPEED;
 
-    let mut ball_x = START_POSITION_x;
+    let mut ball_x = START_POSITION_X;
     let mut ball_y = 130.0;
     let mut ball_speed_x = ball_speed;
     let mut ball_speed_y = -3.0;
 
     let mut player_1 = 150.0;
     let mut player_2 = 140.0;
-    let mut over_line = 30.0;
-    let mut under_line = 570.0;
+    let over_line = 30.0;
+    let under_line = 570.0;
 
     let mut player_points_1 = 0;
     let mut player_points_2 = 0;
+
+    let player_1_name = generate_name();
+    let player_2_name = generate_name();
 
     loop {
         clear_background(WHITE);
@@ -48,7 +74,7 @@ async fn main() {
                 ball_speed_x = -ball_speed;
                 ball_speed += 0.5;
             } else {
-                ball_x = START_POSITION_x;
+                ball_x = START_POSITION_X;
                 ball_speed = START_BALL_SPEED;
                 ball_speed_x = -ball_speed;
                 player_points_1 += 1;
@@ -61,7 +87,7 @@ async fn main() {
             } else {
                 ball_speed_x = ball_speed;
                 ball_speed = START_BALL_SPEED;
-                ball_x = START_POSITION_x;
+                ball_x = START_POSITION_X;
                 player_points_2 += 1;
             }
         }
@@ -73,7 +99,7 @@ async fn main() {
         }
 
         draw_text(
-            &format!("spelare 1: {player_points_1}    spelare 2: {player_points_2}"),
+            &format!("{player_1_name}: {player_points_1}    {player_2_name}: {player_points_2}"),
             200.0,
             20.0,
             10.0,
@@ -81,7 +107,7 @@ async fn main() {
         );
         if player_points_1 > 4 {
             draw_text(
-                &format!("GRATTIS SPELARE 1 VANN"),
+                &format!("GRATTIS {player_1_name} VANN"),
                 200.0,
                 100.0,
                 30.0,
@@ -90,7 +116,7 @@ async fn main() {
         }
         if player_points_2 > 4 {
             draw_text(
-                &format!("GRATTIS SPELARE 2 VANN"),
+                &format!("GRATTIS {player_2_name} VANN"),
                 200.0,
                 100.0,
                 30.0,
