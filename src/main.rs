@@ -1,6 +1,7 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use macroquad::{
+    audio::{load_sound, play_sound, PlaySoundParams},
     prelude::*,
     rand::{srand, ChooseRandom},
 };
@@ -34,7 +35,7 @@ fn generate_name() -> String {
     name
 }
 
-#[macroquad::main("BasicShapes")]
+#[macroquad::main("Foffpong")]
 async fn main() {
     srand(
         SystemTime::now()
@@ -45,6 +46,7 @@ async fn main() {
 
     let background = load_texture("pong.png").await.unwrap();
     let win_image = load_texture("win.png").await.unwrap();
+    let yey = load_sound("yey2.wav").await.unwrap();
 
     let mut ball_speed: f32 = START_BALL_SPEED;
 
@@ -118,6 +120,7 @@ async fn main() {
                 if player_2 < ball_y && player_2 + PLAYER_HEIGHT > ball_y {
                     ball_speed_x = -ball_speed;
                     ball_speed += 0.5;
+                    play_sound(yey, PlaySoundParams::default());
                 } else {
                     ball_x = START_POSITION_X;
                     ball_speed = START_BALL_SPEED;
@@ -129,6 +132,7 @@ async fn main() {
                 if player_1 < ball_y && player_1 + PLAYER_HEIGHT > ball_y {
                     ball_speed_x = ball_speed;
                     ball_speed += 0.5;
+                    play_sound(yey, PlaySoundParams::default());
                 } else {
                     ball_speed_x = ball_speed;
                     ball_speed = START_BALL_SPEED;
@@ -138,9 +142,11 @@ async fn main() {
             }
             if ball_y < over_line + 15.0 {
                 ball_speed_y = ball_speed;
+                play_sound(yey, PlaySoundParams::default());
             }
             if ball_y > under_line - 12.0 {
                 ball_speed_y = -ball_speed;
+                play_sound(yey, PlaySoundParams::default());
             }
 
             draw_text(
