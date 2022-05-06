@@ -47,6 +47,8 @@ async fn main() {
     let background = load_texture("pong.png").await.unwrap();
     let win_image = load_texture("win.png").await.unwrap();
     let yey = load_sound("yey2.wav").await.unwrap();
+    let buuuuuu = load_sound("Bu_2.wav").await.unwrap();
+    let du_vann = load_sound("Du_vann_2.wav").await.unwrap();
 
     let mut ball_speed: f32 = START_BALL_SPEED;
 
@@ -110,6 +112,13 @@ async fn main() {
                     ..Default::default()
                 },
             );
+            if player_points_2 > 4 {
+                play_sound(du_vann, PlaySoundParams::default());
+            }
+
+            if player_points_1 > 4 {
+                play_sound(du_vann, PlaySoundParams::default());
+            }
 
             // update ball position
             ball_x += ball_speed_x;
@@ -126,6 +135,11 @@ async fn main() {
                     ball_speed = START_BALL_SPEED;
                     ball_speed_x = -ball_speed;
                     player_points_1 += 1;
+                    if player_points_1 > 4 {
+                        play_sound(du_vann, PlaySoundParams::default());
+                    } else {
+                        play_sound(buuuuuu, PlaySoundParams::default());
+                    }
                 }
             }
             if ball_x < BOUNCE_DISTANCE + 10.0 {
@@ -138,6 +152,12 @@ async fn main() {
                     ball_speed = START_BALL_SPEED;
                     ball_x = START_POSITION_X;
                     player_points_2 += 1;
+
+                    if player_points_2 > 4 {
+                        play_sound(du_vann, PlaySoundParams::default());
+                    } else {
+                        play_sound(buuuuuu, PlaySoundParams::default());
+                    }
                 }
             }
             if ball_y < over_line + 15.0 {
