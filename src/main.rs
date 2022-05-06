@@ -11,6 +11,7 @@ const PLAYER_HEIGHT: f32 = 150.0;
 const BOUNCE_DISTANCE: f32 = 70.0;
 const START_POSITION_X: f32 = 395.0;
 const START_BALL_SPEED: f32 = 3.7;
+const WINNER_POINTS: i32 = 4;
 
 fn generate_name() -> String {
     let first_syllables = vec![
@@ -74,7 +75,7 @@ async fn main() {
     loop {
         clear_background(WHITE);
 
-        if player_points_1 > 9 || player_points_2 > 9 {
+        if player_points_1 > WINNER_POINTS || player_points_2 > WINNER_POINTS {
             draw_texture_ex(
                 win_image,
                 0.0,
@@ -86,7 +87,7 @@ async fn main() {
                 },
             );
 
-            if player_points_1 > 9 {
+            if player_points_1 > WINNER_POINTS {
                 draw_text(
                     &format!("GRATTIS {player_1_name} VANN"),
                     200.0,
@@ -95,7 +96,7 @@ async fn main() {
                     VIOLET,
                 );
             }
-            if player_points_2 > 9 {
+            if player_points_2 > WINNER_POINTS {
                 draw_text(
                     &format!("GRATTIS {player_2_name} VANN"),
                     200.0,
@@ -115,11 +116,11 @@ async fn main() {
                     ..Default::default()
                 },
             );
-            if player_points_2 > 9 {
+            if player_points_2 > WINNER_POINTS {
                 play_sound(du_vann, PlaySoundParams::default());
             }
 
-            if player_points_1 > 9 {
+            if player_points_1 > WINNER_POINTS {
                 play_sound(du_vann, PlaySoundParams::default());
             }
 
@@ -138,7 +139,7 @@ async fn main() {
                     ball_speed = START_BALL_SPEED;
                     ball_speed_x = -ball_speed;
                     player_points_1 += 1;
-                    if player_points_1 > 9 {
+                    if player_points_1 > WINNER_POINTS {
                         play_sound(du_vann, PlaySoundParams::default());
                     } else {
                         play_sound(buuuuuu, PlaySoundParams::default());
@@ -156,7 +157,7 @@ async fn main() {
                     ball_x = START_POSITION_X;
                     player_points_2 += 1;
 
-                    if player_points_2 > 9 {
+                    if player_points_2 > WINNER_POINTS {
                         play_sound(du_vann, PlaySoundParams::default());
                     } else {
                         play_sound(buuuuuu, PlaySoundParams::default());
