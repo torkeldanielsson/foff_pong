@@ -6,7 +6,7 @@ use macroquad::{
     rand::{srand, ChooseRandom},
 };
 
-const PLAYER_SPEED: f32 = 4.0;
+const PLAYER_SPEED: f32 = 5.0;
 const PLAYER_HEIGHT: f32 = 150.0;
 const BOUNCE_DISTANCE: f32 = 70.0;
 const START_POSITION_X: f32 = 395.0;
@@ -68,10 +68,13 @@ async fn main() {
     let player_1_name = generate_name();
     let player_2_name = generate_name();
 
+    let mut player_1_active = false;
+    let mut player_2_active = false;
+
     loop {
         clear_background(WHITE);
 
-        if player_points_1 > 4 || player_points_2 > 4 {
+        if player_points_1 > 9 || player_points_2 > 9 {
             draw_texture_ex(
                 win_image,
                 0.0,
@@ -83,7 +86,7 @@ async fn main() {
                 },
             );
 
-            if player_points_1 > 4 {
+            if player_points_1 > 9 {
                 draw_text(
                     &format!("GRATTIS {player_1_name} VANN"),
                     200.0,
@@ -92,7 +95,7 @@ async fn main() {
                     VIOLET,
                 );
             }
-            if player_points_2 > 4 {
+            if player_points_2 > 9 {
                 draw_text(
                     &format!("GRATTIS {player_2_name} VANN"),
                     200.0,
@@ -112,11 +115,11 @@ async fn main() {
                     ..Default::default()
                 },
             );
-            if player_points_2 > 4 {
+            if player_points_2 > 9 {
                 play_sound(du_vann, PlaySoundParams::default());
             }
 
-            if player_points_1 > 4 {
+            if player_points_1 > 9 {
                 play_sound(du_vann, PlaySoundParams::default());
             }
 
@@ -135,7 +138,7 @@ async fn main() {
                     ball_speed = START_BALL_SPEED;
                     ball_speed_x = -ball_speed;
                     player_points_1 += 1;
-                    if player_points_1 > 4 {
+                    if player_points_1 > 9 {
                         play_sound(du_vann, PlaySoundParams::default());
                     } else {
                         play_sound(buuuuuu, PlaySoundParams::default());
@@ -153,7 +156,7 @@ async fn main() {
                     ball_x = START_POSITION_X;
                     player_points_2 += 1;
 
-                    if player_points_2 > 4 {
+                    if player_points_2 > 9 {
                         play_sound(du_vann, PlaySoundParams::default());
                     } else {
                         play_sound(buuuuuu, PlaySoundParams::default());
@@ -180,18 +183,46 @@ async fn main() {
             );
 
             // player input
-            if macroquad::input::is_key_down(KeyCode::W) {
-                player_1 -= PLAYER_SPEED;
+            if !player_1_active {
+                if ball_y > player_1 {
+                    player_1 += PLAYER_SPEED;
+                }
+                if ball_y < player_1 {
+                    player_1 -= PLAYER_SPEED;
+                }
+            } else {
+                if macroquad::input::is_key_down(KeyCode::W) {
+                    player_1 -= PLAYER_SPEED;
+                }
+                if macroquad::input::is_key_down(KeyCode::S) {
+                    player_1 += PLAYER_SPEED;
+                }
             }
-            if macroquad::input::is_key_down(KeyCode::S) {
-                player_1 += PLAYER_SPEED;
+            if macroquad::input::is_key_down(KeyCode::W)
+                || macroquad::input::is_key_down(KeyCode::S)
+            {
+                player_1_active = true;
+            }
+            if macroquad::input::is_key_down(KeyCode::Up)
+                || macroquad::input::is_key_down(KeyCode::Down)
+            {
+                player_2_active = true;
             }
 
-            if macroquad::input::is_key_down(KeyCode::Up) {
-                player_2 -= PLAYER_SPEED;
-            }
-            if macroquad::input::is_key_down(KeyCode::Down) {
-                player_2 += PLAYER_SPEED;
+            if !player_2_active {
+                if ball_y > player_2 {
+                    player_2 += PLAYER_SPEED;
+                }
+                if ball_y < player_2 {
+                    player_2 -= PLAYER_SPEED;
+                }
+            } else {
+                if macroquad::input::is_key_down(KeyCode::Up) {
+                    player_2 -= PLAYER_SPEED;
+                }
+                if macroquad::input::is_key_down(KeyCode::Down) {
+                    player_2 += PLAYER_SPEED;
+                }
             }
 
             draw_circle(ball_x, ball_y, 20.0, VIOLET);
